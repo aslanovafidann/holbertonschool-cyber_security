@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo tcpdump -c 5 -nn -v
+sudo nmap -sT -p 80 127.0.0.1
