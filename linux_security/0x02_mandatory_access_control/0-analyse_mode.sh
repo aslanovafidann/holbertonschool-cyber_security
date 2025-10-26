@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "SELinux status: $(getenforce 2>/dev/null || echo Disabled)"
+sestatus | grep "SELinux status" | awk '{print "SELinux status: " $3}'
