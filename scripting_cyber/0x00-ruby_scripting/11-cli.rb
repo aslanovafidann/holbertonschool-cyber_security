@@ -41,3 +41,10 @@ OptionParser.new do |op|
     puts "Task '#{rm_task}' removed."
   end
 
+
+  op.on("-h", "--help", "Show help") do
+    puts op
+    exit
+  end
+
+end.parse!
