@@ -1,0 +1,65 @@
+Part A - Safe Simulation Table:
+
+| Behavior                   | Risk Level | What Is Allowed                                                                 | What Is Prohibited                                                              | Cleanup Steps                                                                 |
+|----------------------------|------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| C2 Beacon                  | Medium     | Simulate outbound beacon to an isolated, tester-controlled lab listener only    | Connecting to external/internet IPs; beaconing to or from production systems   | Kill listener process; remove implant binary; clear related firewall log rules |
+| Persistence (Registry Run) | Low        | Add a benign Run key entry pointing to a harmless script on the lab VM only     | Modifying registry on any production or out-of-scope machine                   | Delete the registry entry; remove the associated script file; verify with Autoruns |
+| Data Exfiltration          | High       | Transfer a synthetic, clearly labeled dummy file within the isolated lab network | Touching, copying, or transferring any real, sensitive, or PII data             | Delete all copies of dummy file from source, destination, and any temp paths  |
+| Lateral Movement           | High       | Attempt movement only between pre-approved lab VMs listed in the signed RoE     | Any connection attempt to systems outside the approved lab subnet               | Close all remote sessions; remove any dropped tools or scripts on target VMs  |
+| Credential Access          | Medium     | Dump credentials from memory on the designated lab VM only using approved tools | Accessing, storing, or exporting real credentials; testing against live systems | Securely wipe any captured credential files; document and confirm deletion    |
+
+Part B - De-confliction Protocol:
+
+1. Point of Contact:
+   When the Blue Team detects suspicious activity during the exercise window,
+   they must immediately contact the designated Red Team Lead via the secure
+   out-of-band channel established before the exercise (encrypted messaging
+   app or dedicated phone line). The Red Team Lead's contact details are
+   distributed to the SOC supervisor and Blue Team lead prior to exercise start.
+
+2. Validation Process:
+   The Red Team Lead cross-references the detected activity against the signed
+   emulation plan and active exercise timeline. Validation must be completed
+   within 15 minutes of the Blue Team's notification. If the Red Team Lead is
+   unreachable within 15 minutes, the exercise is automatically paused until
+   confirmation is obtained.
+
+3. Test Continuation:
+   The exercise is paused immediately upon Blue Team notification and remains
+   paused during the validation window. If the activity is confirmed as part
+   of the simulation, the Red Team Lead issues a written "continue" signal and
+   the exercise resumes. If confirmed as simulation activity, the Blue Team
+   may choose to document and stand down, or continue monitoring per their
+   training objectives.
+
+4. Real Incident Discovery:
+   If the detected activity is determined to NOT be part of the simulation,
+   the exercise is immediately and permanently halted. The Red Team Lead
+   notifies the client's Incident Response lead and CISO within 10 minutes.
+   Standard incident response procedures take full priority. No simulation
+   activity resumes until the real incident is fully contained and a written
+   authorization to resume is issued by the client.
+
+Part C - Emergency Stop Criteria:
+
+[Condition 1 - Scope Breach]: Any simulation activity is detected on, or
+   originates from, a system outside the pre-approved lab boundary defined
+   in the signed RoE. This includes unexpected lateral movement reaching
+   production subnets, corporate endpoints, or third-party systems.
+
+[Condition 2 - Production System Impact]: Any alert, anomaly, or disruption
+   is triggered on a production system, live service, or business-critical
+   infrastructure — regardless of whether the cause is confirmed as simulation
+   activity. Service integrity takes absolute priority over exercise continuity.
+
+[Condition 3 - Real Threat Actor Detected]: Evidence emerges during the
+   exercise that a genuine, unauthorized threat actor is active in the
+   environment. The simulation must stop immediately to prevent red team
+   activity from masking, interfering with, or being confused with a real
+   intrusion during incident response.
+
+[Condition 4 - Loss of Operator Control]: The red team loses reliable control
+   of a deployed tool, implant, or script (e.g., runaway process, unintended
+   propagation, unreachable C2), making it impossible to guarantee safe,
+   bounded behavior. Simulation halts until full control and containment
+   are re-established and verified.

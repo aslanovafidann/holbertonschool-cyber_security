@@ -1,0 +1,70 @@
+Part A - OpSec Risk Table:
+
+| Risk                                 | Likelihood | Impact | Mitigation                                                                                      |
+|--------------------------------------|------------|--------|-------------------------------------------------------------------------------------------------|
+| C2 infrastructure exposure           | Medium     | High   | Register all C2 domains under anonymous or engagement-dedicated business identities; use        |
+|                                      |            |        | redirectors to decouple operator infrastructure from final listener; rotate domains per         |
+|                                      |            |        | engagement and never reuse across clients.                                                      |
+| Operator identity leakage            | Medium     | High   | Use dedicated engagement personas and email addresses; never register infrastructure with       |
+|                                      |            |        | personal accounts; sanitize tool metadata (author fields, compile paths) before deployment.     |
+| Tool signature detection             | High       | Medium | Recompile payloads fresh per engagement with modified signatures; test against current AV       |
+|                                      |            |        | engines in an air-gapped lab before deployment; avoid publicly leaked or unmodified frameworks. |
+| Log artifacts left on target systems | Medium     | High   | Maintain a per-host artifact inventory throughout the exercise; execute a structured cleanup    |
+|                                      |            |        | checklist at exercise close; verify removal with a second operator before sign-off.             |
+
+Part B - Pre-Engagement OpSec Checklist:
+
+[Category 1 - Communication Security]
+[ ] Use end-to-end encrypted channels (e.g., Signal, encrypted Matrix) for all
+    internal team coordination — no plaintext email or consumer messaging apps.
+[ ] Establish a dedicated, engagement-specific communication workspace that is
+    destroyed or archived securely upon engagement close.
+
+[Category 2 - Infrastructure Setup]
+[ ] Provision all C2 domains and cloud infrastructure using dedicated engagement
+    accounts with no links to operator personal or company identity.
+[ ] Deploy at least one redirector layer between the target environment and the
+    actual C2 listener to prevent direct infrastructure attribution.
+[ ] Verify that all C2 domain registration WHOIS records are privacy-protected
+    and that hosting provider abuse contacts cannot trivially identify the operator.
+
+[Category 3 - Tool Preparation]
+[ ] Recompile all payloads and implants from source for each engagement;
+    never deploy precompiled or publicly available binaries without modification.
+[ ] Strip or spoof all metadata from payloads and documents (author name,
+    company, compile path, PE timestamps) before staging.
+[ ] Validate all tools against current AV and EDR signatures in an isolated
+    lab environment before use; document evasion baseline per tool.
+
+[Category 4 - Documentation Hygiene]
+[ ] Store all client-related data, notes, and findings exclusively on
+    encrypted, engagement-dedicated devices or secure vaults — never on
+    personal laptops, phones, or unencrypted cloud storage.
+[ ] Sanitize all internal planning documents to remove operator names,
+    personal handles, and company-internal references before sharing
+    any materials with the client.
+
+Part C - Why Red Team OpSec Protects the Client:
+
+Red team operational security is a professional and ethical obligation to the
+client, not merely a self-protective habit. When red team infrastructure,
+tools, or identities are exposed mid-engagement, the exercise results are
+invalidated: the Blue Team has observed red team methods rather than genuine
+attacker behavior, and the client receives a distorted picture of their true
+security posture — potentially leading them to believe they are better or worse
+protected than they actually are.
+
+Beyond result integrity, a compromised red team operation introduces real risk
+to the client's environment. Exposed C2 infrastructure can be taken over or
+mimicked by actual threat actors who monitor red team activity, turning a
+controlled exercise into a genuine attack surface. Client data handled without
+proper hygiene — stored on personal devices, transmitted over unencrypted
+channels, or logged in unsecured notes — represents a direct breach of the
+trust and confidentiality agreement the client has extended to the red team.
+
+Ultimately, a red team that cannot protect its own operational security cannot
+credibly evaluate anyone else's. Maintaining strict OpSec demonstrates the
+professionalism the client is paying for, preserves the legal and reputational
+integrity of the engagement, and ensures that the findings delivered at the
+end of the exercise reflect reality — not an operation that was burned before
+it had a chance to test what it was designed to test.

@@ -1,0 +1,65 @@
+1. Detection Rate:
+
+Techniques Tested:   5
+Techniques Detected: 3
+
+Detection Rate = 3 / 5 = 60%
+
+The Blue Team successfully identified 3 out of 5 simulated attack techniques,
+achieving a 60% detection rate. While this indicates functional baseline
+visibility, two undetected techniques represent critical blind spots that a
+real FIN7 operator could exploit without triggering any alert.
+
+2. MTTD Assessment:
+
+Average MTTD: 32 minutes
+
+Assessment: NOT ACCEPTABLE
+
+For a financial institution, 32 minutes is well above the acceptable threshold.
+FIN7 and comparable financially motivated threat actors operate on timelines
+measured in minutes: credential harvesting, lateral movement, and POS malware
+deployment can all complete within 10 to 15 minutes of initial execution.
+Industry benchmarks from SANS and Verizon DBIR consistently show that breaches
+in financial environments with the highest impact occur when dwell time and
+detection lag exceed 15 minutes. At 32 minutes average MTTD, the Blue Team
+is operating at roughly twice the acceptable response window for this threat
+profile, meaning a real intrusion could reach its objective before a single
+alert is acknowledged.
+
+3. ATT&CK Coverage Table:
+
+| ATT&CK ID  | Technique Name                  | Tested | Detected | MTTD    |
+|------------|---------------------------------|--------|----------|---------|
+| T1566.001  | Spearphishing Attachment        | Yes    | Yes      | 18 min  |
+| T1059.001  | PowerShell Execution            | Yes    | Yes      | 27 min  |
+| T1547.001  | Registry Run Key Persistence    | Yes    | Yes      | 51 min  |
+| T1055.001  | DLL Injection                   | Yes    | No       | -       |
+| T1003.001  | LSASS Memory Credential Dumping | Yes    | No       | -       |
+
+4. Recommendations Per Undetected Technique:
+
+T1055.001 - DLL Injection:
+Enable and tune Sysmon with EventID 8 (CreateRemoteThread) and EventID 10
+(ProcessAccess) rules targeting suspicious cross-process memory writes.
+Deploy an EDR solution with in-memory scanning capabilities and configure
+alerts for unsigned DLLs loaded into high-value processes such as
+explorer.exe or svchost.exe.
+
+T1003.001 - LSASS Memory Credential Dumping:
+Enable Windows Credential Guard to protect LSASS memory from direct access,
+and configure an audit rule on Sysmon EventID 10 for any process opening
+a handle to lsass.exe with PROCESS_VM_READ permissions. Alert on any
+non-system process accessing LSASS and consider enabling Protected Process
+Light (PPL) for LSASS on all endpoints.
+
+5. Executive Summary:
+
+During this controlled simulation of FIN7 attack techniques against our
+environment, the security team successfully detected 3 out of 5 simulated
+attack behaviors, a 60% detection rate, while two critical techniques went
+completely undetected. The average time to detect a threat was 32 minutes,
+which exceeds the recommended 15-minute threshold for financial institutions
+facing fast-moving adversaries of this profile. We recommend immediate
+investment in memory-level endpoint detection and LSASS protection controls
+to close the identified gaps before a real adversary exploits them.

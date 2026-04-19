@@ -1,0 +1,41 @@
+Emulation Plan: FIN7
+
+Step 1: Initial Access
+- Tactic: Initial Access
+- Technique: T1566.001 — Spearphishing Attachment
+- Procedure: In a controlled lab environment, send a crafted email to a test
+  mailbox containing a macro-enabled Word document (.docm) that mimics a fake
+  invoice. The document contains a benign VBA macro that, upon enabling, writes
+  a harmless marker file to the Desktop (no payload, no C2). The target machine
+  is an isolated Windows VM with no internet access.
+- Expected Blue Team Visibility: Email gateway alert on macro-enabled attachment,
+  Endpoint Detection (EDR) alert on Office spawning child processes, Windows
+  Security event logs showing document open, SIEM correlation rule on
+  winword.exe writing files outside standard Office paths.
+
+Step 2: Execution
+- Tactic: Execution
+- Technique: T1059.001 — Command and Scripting Interpreter: PowerShell
+- Procedure: From the compromised test VM, simulate the macro triggering an
+  encoded PowerShell command (base64-encoded, no real payload) that echoes a
+  string to a local log file. The command is run with -NonInteractive
+  -WindowStyle Hidden flags to mimic FIN7 tradecraft. All actions stay local
+  with no outbound connections.
+- Expected Blue Team Visibility: PowerShell Script Block Logging (Event ID 4104)
+  capturing the decoded command, Process creation logs (Event ID 4688) showing
+  powershell.exe launched by winword.exe, EDR alert on encoded PowerShell
+  execution, SIEM alert on suspicious PowerShell parent-child process chain.
+
+Step 3: Persistence
+- Tactic: Persistence
+- Technique: T1547.001 — Boot or Logon Autostart Execution: Registry Run Keys
+- Procedure: On the isolated lab VM, simulate persistence by adding a benign
+  registry entry under HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+  pointing to a harmless echo script (e.g., a .bat file that writes a timestamp
+  to a log). The entry is named to blend with legitimate software. No real
+  malware or C2 involved. Entry is removed at end of exercise.
+- Expected Blue Team Visibility: Registry modification alert from EDR or
+  Sysmon (Event ID 13) on Run key write, Windows Security audit log for
+  registry object access, SIEM correlation on new autorun entry created outside
+  software installation context, Autoruns (Sysinternals) diff detecting new
+  persistence entry.

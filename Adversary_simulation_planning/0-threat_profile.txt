@@ -1,0 +1,26 @@
+Threat Actor Profile: FIN7
+
+Target Sectors:
+- Financial Services (banks, credit unions, payment processors)
+- Hospitality (hotel chains, restaurants, casinos)
+- Retail (point-of-sale environments, e-commerce)
+
+Motivation:
+FIN7 is a financially motivated cybercriminal group primarily focused on stealing
+payment card data and conducting large-scale fraud for direct monetary gain.
+
+Key Techniques:
+1. T1566.001: Spearphishing Attachment (Initial Access)
+2. T1059.001: PowerShell (Execution)
+3. T1055.001: Dynamic-link Library Injection (Defense Evasion / Privilege Escalation)
+
+Associated Tools:
+- CARBANAK (banking trojan used for fraudulent transfers)
+- HALFBAKED (backdoor used for persistent access)
+
+Known Campaign:
+Carbanak Campaign (2014–2015): FIN7, in coordination with the Carbanak group,
+targeted over 100 financial institutions across 30+ countries by spearphishing
+bank employees and deploying the Carbanak malware to manipulate banking systems.
+The campaign resulted in estimated losses exceeding $1 billion USD through
+fraudulent SWIFT transfers, ATM cashouts, and account manipulation.
